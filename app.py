@@ -4,10 +4,14 @@ app = Flask(__name__)
 
 
 @app.route("/", methods=["GET"])
-def hello_world():
-    print("Hello World")
-    return "Hello World"
+def index():
+    print("This is the vision API.")
+    return "This is the vision API."
 
+@app.route("/hello", methods=["GET"])
+def hello():
+    print("Hello, World!")
+    return "Hello, World!"
 
 if __name__ == "__main__":
     app.run()
