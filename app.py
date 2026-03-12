@@ -1,5 +1,10 @@
 from flask import Flask
 
+#
+#                MAIN FILE FOR SERVER
+#    THIS FILE DEFINES THE API AND ITS ENDPOINTS
+#
+
 app = Flask(__name__)
 
 
