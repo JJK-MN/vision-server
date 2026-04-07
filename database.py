@@ -1,9 +1,13 @@
 import os
 import bcrypt
+from dotenv import load_dotenv
 from supabase import create_client, Client
 
-url: str = str(os.environ.get("SUPABASE_URL"))
-key: str = str(os.environ.get("SUPABASE_KEY"))
+load_dotenv()
+
+url: str = str(os.getenv("SUPABASE_URL"))
+key: str = str(os.getenv("SUPABASE_KEY"))
+
 supabase: Client = create_client(url, key)
 
 # Instead of generating a new hash for each failed authentication attempt, we can use a fixed dummy hash.
