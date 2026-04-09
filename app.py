@@ -7,7 +7,6 @@ import database
 
 app = Flask(__name__)
 
-
 @app.route("/", methods=["GET"])
 def index():
     print("This is the vision API.")
@@ -25,6 +24,8 @@ def create_user(username: str, password: str):
         return {"message": "User created successfully"}, 201
     except ValueError as e:
         return {"error": str(e)}, 400
+
+
 
 if __name__ == "__main__":
     app.run()
