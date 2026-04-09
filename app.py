@@ -28,14 +28,22 @@ def create_user(username: str, password: str):
     except ValueError as e:
         return {"error": str(e)}, 400
 
-# Method to send a auth token to the client for authentication
-@app.route("/login/<username>/<password>", methods=["POST"])
-def login(username: str, password: str):
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"error": "Missing JSON body"}), 400
+
+    username = data.get("username")
+    password = data.get("password")
+    if not username or not password:
+        return jsonify({"error": "Missing credentials"}), 400
+
     try:
         token = database.authenticate_user(username, password)
-        return {"token": token}, 200
+        return jsonify({"token": token}), 200
     except ValueError as e:
-        return {"error": str(e)}, 401
+        return jsonify({"error": str(e)}), 401
 
 @app.route("/transcribe/<token>", methods=["POST"])
 def transcribe(token: str):
