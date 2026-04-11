@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 import jwt
 from datetime import datetime, timedelta
+from typing import Optional
 
 load_dotenv()
 
@@ -46,14 +47,20 @@ def generate_auth_token(username: str) -> str:
         token = token.decode("utf-8")
     return token
 
-def verify_auth_token(token: str) -> str:
+def verify_auth_token(token: str) -> Optional[str]:
+    # Treat absent, empty, or literal "null" tokens as unauthenticated
+    if not token:
+        return None
+    if isinstance(token, str) and token.lower() == "null":
+        return None
+
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        return payload["sub"]  # return the username
+        return payload.get("sub")  # return the username or None
     except jwt.ExpiredSignatureError:
-        raise ValueError("Token has expired")
+        return None
     except jwt.InvalidTokenError:
-        raise ValueError("Invalid token")
+        return None
 
 def authenticate_user(username: str, password: str) -> str:
     """Authenticate the user and return a JWT token on success.

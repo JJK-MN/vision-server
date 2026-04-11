@@ -6,7 +6,7 @@ _voice_pipeline: Optional[object] = None
 def _is_enabled() -> bool:
     try:
         import config
-        return getattr(config, "USE_MODELS", False)
+        return getattr(config, "USE_VOICE", False)
     except Exception:
         return False
 
