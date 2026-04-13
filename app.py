@@ -21,13 +21,26 @@ def hello():
     print("Hello, World!")
     return "Hello, World!"
 
-@app.route("/create_user/<username>/<password>", methods=["POST"])
-def create_user(username: str, password: str):
+@app.route("/create_user", methods=["POST"])
+def create_user():
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"error": "Missing JSON body"}), 400
+
+    username = data.get("username")
+    password = data.get("password")
+    email = data.get("email")
+    first_name = data.get("firstName")
+    last_name = data.get("lastName")
+
+    if not all([username, password, email, first_name, last_name]):
+        return jsonify({"error": "Missing required fields"}), 400
+
     try:
-        database.create_user(username, password)
-        return {"message": "User created successfully"}, 201
+        database.create_user(username, password, email, first_name, last_name)
+        return jsonify({"message": "User created successfully"}), 201
     except ValueError as e:
-        return {"error": str(e)}, 400
+        return jsonify({"error": str(e)}), 400
 
 @app.route("/login", methods=["POST"])
 def login():

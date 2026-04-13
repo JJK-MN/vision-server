@@ -22,7 +22,7 @@ JWT_SECRET = os.getenv("JWT_SECRET_KEY", "CHANGE_ME_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_EXP_SECONDS = int(os.getenv("JWT_EXP_SECONDS", "3600"))
 
-def create_user(username: str, password: str):
+def create_user(username: str, password: str, email: str, first_name: str, last_name: str):
     existing_user = supabase.table("USERS").select("*").eq("username", username).execute()
 
     if existing_user.data:
@@ -32,7 +32,10 @@ def create_user(username: str, password: str):
 
     supabase.table("USERS").insert({
         "username": username,
-        "password": password_hash.decode("utf-8")  # store as string
+        "password": password_hash.decode("utf-8"),  # store as string
+        "email": email,
+        "first_name": first_name,
+        "last_name": last_name
     }).execute()
 
 def generate_auth_token(username: str) -> str:
